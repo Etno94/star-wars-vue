@@ -1,5 +1,5 @@
 <template>
-    <img alt="Vue logo" src="src/assets/QU-logo.png">
+    <img alt="Vue logo" src="../assets/QU-logo.png">
 </template>
 
 <style>

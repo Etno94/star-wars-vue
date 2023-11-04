@@ -5,9 +5,9 @@
     "baseUrl": "./",
     "moduleResolution": "node",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "*": ["src/*"],
+      "test/*": ["test/*"],
+      "underscore": ["lodash"]
     },
     "lib": [
       "esnext",
