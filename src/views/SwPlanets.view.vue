@@ -37,6 +37,7 @@ export default {
       await this.getSwPlanets();
       setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPlanets));
     }
+    [tableHeaderValues, tableRowValues] = this.formatSwPlanetsData();
   },
   methods: {
     getSwPlanetsApiURL() {
@@ -62,6 +63,11 @@ export default {
         }
         throw error;
       }
+    },
+    formatSwPlanetsData(swPlanetsFetchedData) {
+        let headers = [];
+        let rows = [];
+        return [headers, rows];
     }
   }
 }
