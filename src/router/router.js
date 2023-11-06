@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import BSTable from '../components/table.component.vue';
+import SwPlanets from '../views/SwPlanets.view.vue';
 
 const routes = [
   {
-    path: '/',
-    name: 'Table',
-    component: BSTable,
+    path: '/planets',
+    name: 'SwPlanets',
+    component: SwPlanets,
   },
   {
     path: '/:catchAll(.*)',
-    redirect: '/'
+    redirect: '/planets'
   },
 ];
 

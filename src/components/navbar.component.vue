@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style>
-:host {
-    flex-basis: 100%;
+nav {
+    flex: 1 1 100%;
 }
 </style>
