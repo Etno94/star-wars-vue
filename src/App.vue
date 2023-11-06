@@ -3,20 +3,18 @@
   <router-view />
 </template>
 
-<script>
-import { devEnvironment } from '../environment/environment.dev.js';
-
-import { setLocalStorage, getLocalStorage } from './services/storage.service.js';
-
-import { LocalStorageEnum } from './enums/localStorage.enum.js';
-import {SwRootEntries} from './enums/swRootEntries.enum.js';
-
+<script lang="ts">
+import { defineComponent } from 'vue';
 import NavBar from './components/navbar.component.vue';
+import { devEnvironment } from '../environment/environment.dev';
+import { setLocalStorage, getLocalStorage } from './services/storage.service';
+import { LocalStorageEnum } from './enums/localStorage.enum';
+import {SwRootEntries} from './enums/swRootEntries.enum';
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {
-    NavBar,
+    NavBar
   },
   data() {
     return {
@@ -27,7 +25,6 @@ export default {
   },
   async mounted() {
     let localStarwarsEntries = getLocalStorage(this.localStorageKeys.StarWars_Root_Entries);
-
     if (localStarwarsEntries) {
       this.starwarsEntries = JSON.parse(localStarwarsEntries);
     } 
@@ -35,20 +32,16 @@ export default {
       await this.getSWEntries();
       setLocalStorage(this.localStorageKeys.StarWars_Root_Entries, JSON.stringify(this.starwarsEntries));
     }
-
     this.localSaveSwEntries(this.starwarsEntries);
   },
   methods: {
     async getSWEntries() {
       try {
         const response = await fetch(devEnvironment.baseApiURL);
-
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const data = await response.json();
-
         return (this.starwarsEntries = data);
       } 
       catch (error) {
@@ -56,12 +49,12 @@ export default {
           console.error('A network error occurred', error.message);
         } 
         else {
-          console.error('An error occurred', error.message);
+          console.error('An error occurred', error);
         }
         throw error;
       }
     },
-    localSaveSwEntries(swEntries) {
+    localSaveSwEntries(swEntries: string[]) {
       for (let key in swEntries) {
         switch (key) {
           case this.swRootEntryKeys.films:
@@ -92,14 +85,11 @@ export default {
       }
     }
   }
-}
+});
 </script>
 
 <style>
 body {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
   border: 0;
@@ -110,7 +100,6 @@ body {
   list-style: none;
   border-spacing: 0;
 }
-
 #app {
   height: 100vh;
   width: 100vw;
@@ -123,7 +112,6 @@ body {
   align-items: center;
   background-color: #1c1b1b;
 }
-
 #app>* {
   margin-bottom: 12px;
 }

@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import {setLocalStorage, getLocalStorage} from '../services/storage.service.js';
-import {LocalStorageEnum} from '../enums/localStorage.enum.js';
+import {setLocalStorage, getLocalStorage} from '../services/storage.service';
+import {LocalStorageEnum} from '../enums/localStorage.enum';
 
 import BSTable from '../components/table.component.vue';
 
@@ -37,7 +37,7 @@ export default {
       await this.getSwPlanets();
       setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPlanets));
     }
-    [tableHeaderValues, tableRowValues] = this.formatSwPlanetsData();
+    // [this.tableHeaderValues, this.tableRowValues] = this.formatSwPlanetsData();
   },
   methods: {
     getSwPlanetsApiURL() {
@@ -65,6 +65,7 @@ export default {
       }
     },
     formatSwPlanetsData(swPlanetsFetchedData) {
+        console.log(swPlanetsFetchedData);
         let headers = [];
         let rows = [];
         return [headers, rows];

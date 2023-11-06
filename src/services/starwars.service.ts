@@ -1,6 +1,6 @@
-import {devEnvironment} from '../../environment/environment.dev.js';
+import {devEnvironment} from '../../environment/environment.dev';
 
-export async function fetchSwData(apiURL) {
+export async function fetchSwData(apiURL: string) {
   try {
     const response = await fetch(apiURL || devEnvironment.baseApiURL);
 
@@ -14,7 +14,7 @@ export async function fetchSwData(apiURL) {
     if (error instanceof TypeError) {
       console.error('A network error occurred', error.message);
     } else {
-      console.error('An error occurred', error.message);
+      console.error('An error occurred', error);
     }
     throw error;
   }
