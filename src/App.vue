@@ -11,7 +11,8 @@ import { setLocalStorage, getLocalStorage } from './services/storage.service';
 import { LocalStorageEnum } from './enums/localStorage.enum';
 import {SwRootEntries} from './enums/swRootEntries.enum';
 
-export default defineComponent({
+export default defineComponent(
+  {
   name: 'App',
   components: {
     NavBar

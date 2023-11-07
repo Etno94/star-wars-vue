@@ -6,13 +6,17 @@
     </BSTable>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import {setLocalStorage, getLocalStorage} from '../services/storage.service';
 import {LocalStorageEnum} from '../enums/localStorage.enum';
+import {Paged} from '../models/paged.model';
+import {Planet} from '../models/planet.model';
+import {Table} from '../models/table.model';
 
 import BSTable from '../components/table.component.vue';
 
-export default {
+export default defineComponent({
   name: 'SwPlanets',
   components: {
     BSTable
@@ -21,13 +25,17 @@ export default {
     return {
       localStorageKeys: LocalStorageEnum,
       swPlanetsApiURL: "https://swapi.dev/api/planets/",
-      starwarsPlanets: [],
-      tableHeaderValues: ['head 1','head 2','head 3'],
-      tableRowValues: [['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3']], 
+      starwarsPlanets: {} as Paged<Planet>,
+      tableHeaderValues: [] as string[],
+      tableRowValues: [] as string[][], 
     };
   },
   async mounted() {
-    console.log('sw planets');
+    // Mock data
+    this.tableHeaderValues = ['head 1','head 2','head 3'];
+    this.tableRowValues = [['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3']];
+    // -Mock Data
+
     this.getSwPlanetsApiURL();
 
     let localStarwarsPlanets = getLocalStorage(this.localStorageKeys.StarWars_Planets_Entries);
@@ -37,7 +45,9 @@ export default {
       await this.getSwPlanets();
       setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPlanets));
     }
-    // [this.tableHeaderValues, this.tableRowValues] = this.formatSwPlanetsData();
+    const formatedData: Table | null = this.formatSwPlanetsData(this.starwarsPlanets.results);
+    this.tableHeaderValues = formatedData?.headers || [];
+    this.tableRowValues = formatedData?.rows || [];
   },
   methods: {
     getSwPlanetsApiURL() {
@@ -52,26 +62,42 @@ export default {
           throw new Error('Network response was not ok');
         }
 
-        const data = await response.json();
+        const data: Paged<Planet> = await response.json();
 
         return (this.starwarsPlanets = data);
       } catch (error) {
         if (error instanceof TypeError) {
           console.error('A network error occurred', error.message);
         } else {
-          console.error('An error occurred', error.message);
+          console.error('An error occurred', error);
         }
         throw error;
       }
     },
-    formatSwPlanetsData(swPlanetsFetchedData) {
+    formatSwPlanetsData(swPlanetsFetchedData: Planet[]): Table | null {
         console.log(swPlanetsFetchedData);
-        let headers = [];
-        let rows = [];
-        return [headers, rows];
+        if (!swPlanetsFetchedData.length) return null;
+
+        let tableData: Table = {
+            headers: [],
+            rows: [],
+        }
+        for (let key in swPlanetsFetchedData[0]) {
+            if (key != 'created' && key != 'edited') tableData.headers.push(key);
+        }
+        for(let row of swPlanetsFetchedData) {
+            let newRow = [];
+            for (let key of tableData.headers.filter(k => k != 'created' && k != 'edited')) {
+                const cellValue = row[key as keyof Planet];
+                newRow.push(Array.isArray(cellValue) ? `${cellValue.length} ${key}` : cellValue as string);
+            }
+            tableData.rows.push(newRow);
+        }
+        return tableData;
     }
   }
-}
+})
+
 </script>
 
 <style>
