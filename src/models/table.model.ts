@@ -1,4 +1,4 @@
-export interface Table {
+export interface Table<T> {
     headers: string[]; 
-    rows: string[][];
+    rows: T[];
 }

@@ -1,25 +1,33 @@
 <template>
-    <BSTable
+    <BsTable
         v-bind:tableHeaderValues="tableHeaderValues"
         v-bind:tableRowValues="tableRowValues"
     >
-    </BSTable>
+    </BsTable>
+    <BsPagination></BsPagination>
 </template>
 
 <script lang="ts">
+
 import { defineComponent } from 'vue';
 import {setLocalStorage, getLocalStorage} from '../services/storage.service';
+
 import {LocalStorageEnum} from '../enums/localStorage.enum';
+
+// Models & Dtos
 import {Paged} from '../models/paged.model';
 import {Planet} from '../models/planet.model';
 import {Table} from '../models/table.model';
 
-import BSTable from '../components/table.component.vue';
+// Components
+import BsTable from '../components/table.component.vue';
+import BsPagination from '../components/pagination.component.vue';
 
 export default defineComponent({
   name: 'SwPlanets',
   components: {
-    BSTable
+    BsTable,
+    BsPagination
   },
   data() {
     return {
@@ -27,14 +35,11 @@ export default defineComponent({
       swPlanetsApiURL: "https://swapi.dev/api/planets/",
       starwarsPlanets: {} as Paged<Planet>,
       tableHeaderValues: [] as string[],
-      tableRowValues: [] as string[][], 
+      tableRowValues: [] as Planet[],
+      propsToExclude: ['created', 'edited', 'url']
     };
   },
   async mounted() {
-    // Mock data
-    this.tableHeaderValues = ['head 1','head 2','head 3'];
-    this.tableRowValues = [['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3'], ['cell 1','cell 2','cell 3']];
-    // -Mock Data
 
     this.getSwPlanetsApiURL();
 
@@ -45,7 +50,7 @@ export default defineComponent({
       await this.getSwPlanets();
       setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPlanets));
     }
-    const formatedData: Table | null = this.formatSwPlanetsData(this.starwarsPlanets.results);
+    const formatedData: Table<Planet> | null = this.formatSwPlanetsData(this.starwarsPlanets.results);
     this.tableHeaderValues = formatedData?.headers || [];
     this.tableRowValues = formatedData?.rows || [];
   },
@@ -74,26 +79,55 @@ export default defineComponent({
         throw error;
       }
     },
-    formatSwPlanetsData(swPlanetsFetchedData: Planet[]): Table | null {
+    formatSwPlanetsData(swPlanetsFetchedData: Planet[]): Table<Planet> | null {
         console.log(swPlanetsFetchedData);
         if (!swPlanetsFetchedData.length) return null;
 
-        let tableData: Table = {
+        let tableData: Table<Planet> = {
             headers: [],
             rows: [],
         }
         for (let key in swPlanetsFetchedData[0]) {
-            if (key != 'created' && key != 'edited') tableData.headers.push(key);
+            if (!this.propsToExclude.includes(key)) tableData.headers.push(key);
         }
-        for(let row of swPlanetsFetchedData) {
-            let newRow = [];
-            for (let key of tableData.headers.filter(k => k != 'created' && k != 'edited')) {
-                const cellValue = row[key as keyof Planet];
-                newRow.push(Array.isArray(cellValue) ? `${cellValue.length} ${key}` : cellValue as string);
+        swPlanetsFetchedData.forEach((item: Planet) => {
+            const filteredRow: Planet = {
+                climate: '',
+                diameter: 0,
+                films: [],
+                gravity: 0,
+                name: '',
+                orbital_period: 0,
+                population: 0,
+                residents: [],
+                rotation_period: 0,
+                surface_water: 0,
+                terrain: '',
+                url: '',
+            };
+
+            for (let key of tableData.headers) {
+                if (!this.propsToExclude.includes(key)) {
+                    if (typeof filteredRow[key as keyof Planet] === 'number') {
+                        filteredRow[key as keyof Planet] = parseFloat(String(item[key]));
+                    } else {
+                        filteredRow[key as keyof Planet] = item[key];
+                    }
+                }
             }
-            tableData.rows.push(newRow);
-        }
+            const orderedRow = this.sortProperties(filteredRow, tableData.headers);
+            tableData.rows.push(orderedRow);
+        });
         return tableData;
+    },
+    sortProperties(obj: any, keysOrder: string[]) {
+        const ordered: any = {};
+        keysOrder.forEach((key) => {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                ordered[key] = obj[key];
+            }
+        });
+        return ordered;
     }
   }
 })
