@@ -1,29 +1,31 @@
 <template v-if="planetData">
     <div class="wrapper">
-        <div class="clash-card">
-            <div class="clash-card__image">
+        <div class="planet-card">
+            <div class="planet-card__image">
                 <img :src="creatorImage()" :alt="planetData?.name.toLowerCase()" @error="imageError = true"/>
+                <div class="planet-card__unit-name">{{ planetData?.name }}</div>
             </div>
-            <div class="clash-card__level">Level 4</div>
-            <div class="clash-card__unit-name">{{ planetData?.name }}</div>
-            <div class="clash-card__unit-description">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consectetur placeat, facilis officia molestias necessitatibus quidem. Nesciunt veritatis fugiat expedita sint libero obcaecati necessitatibus ipsam excepturi similique, illo odit perferendis blanditiis.
-            </div>
+            
+            <!-- <div class="planet-card__unit-description">
+                Description of the terrain: {{ planetData?.terrain }}
+            </div> -->
 
-            <div class="clash-card__unit-stats clearfix">
+            <div class="planet-card__unit-pop p-3">Pop: {{ planetData?.population }}</div>
+
+            <div class="planet-card__unit-stats clearfix">
                 <div class="one-third">
-                    <div class="stat">20<sup>S</sup></div>
-                    <div class="stat-value">Training</div>
+                    <div class="stat">{{ planetData?.rotation_period }}<sup>Hs</sup></div>
+                    <div class="stat-value">Rotation</div>
                 </div>
 
                 <div class="one-third">
-                    <div class="stat">16</div>
-                    <div class="stat-value">Speed</div>
+                    <div class="stat">{{ planetData?.orbital_period }}<sup>Days</sup></div>
+                    <div class="stat-value">Orbital</div>
                 </div>
 
                 <div class="one-third no-border">
-                    <div class="stat">150</div>
-                    <div class="stat-value">Cost</div>
+                    <div class="stat">{{ planetData?.diameter }}</div>
+                    <div class="stat-value">Diameter</div>
                 </div>
 
             </div>
@@ -68,7 +70,7 @@ export default defineComponent({
     }
 }
 
-.clash-card {
+.planet-card {
     background: white;
     width: 300px;
     display: inline-block;
@@ -80,10 +82,9 @@ export default defineComponent({
     z-index: 9999;
 }
 
-.clash-card__image {
+.planet-card__image {
     position: relative;
-    height: 230px;
-    margin-bottom: 35px;
+    height: 300px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian-bg.jpg');
@@ -96,27 +97,26 @@ export default defineComponent({
     }
 }
 
-.clash-card__level {
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 3px;
-    color: brown;
-}
-
-.clash-card__unit-name {
+.planet-card__unit-name {
+    position: relative;
     font-size: 26px;
-    color: black;
+    color: var(--primary-color);
     font-weight: 900;
     margin-bottom: 5px;
+    top: 40%;
 }
 
-.clash-card__unit-description {
+.planet-card__unit-description {
     padding: 20px;
     margin-bottom: 10px;
 }
+.planet-card__unit-pop {
+    background: var(--main-bg-color);
+    border-color: transparent;
+}
 
-.clash-card__unit-stats {
+
+.planet-card__unit-stats {
     background: brown;
     color: white;
     font-weight: 700;
