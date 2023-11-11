@@ -45,7 +45,7 @@ a:hover {
 }
 /* Reset */
 nav {
-    flex: 1 1 100%;
+    flex: 1 1 90%;
 }
 
 </style>

@@ -49,7 +49,7 @@ export default defineComponent({
         let imageError = false;
 
         const creatorImage = () => {
-            return imageError ? defaultImage : require(`@/assets/${props.planetData?.name.toLowerCase()}.png`);
+            return imageError ? defaultImage : require(`@/assets/planets/${props.planetData?.name.toLowerCase()}.png`);
         }
 
         return {creatorImage, imageError}

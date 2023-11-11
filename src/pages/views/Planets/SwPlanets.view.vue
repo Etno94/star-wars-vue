@@ -85,7 +85,6 @@ export default defineComponent({
       }
     },
     formatSwPlanetsData(swPlanetsFetchedData: Planet[]): Table<Planet> | null {
-        console.log(swPlanetsFetchedData);
         if (!swPlanetsFetchedData.length) return null;
 
         let tableData: Table<Planet> = {

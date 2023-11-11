@@ -118,9 +118,9 @@ body {
   color: var(--primary-color);
 }
 #app {
-  height: auto; /*100vh;*/
-  width: 100vw;
-  min-height: 100vh;
+  /* height: auto; */
+  width: 100%;
+  /* min-height: 100vh; */
   padding: 12px;
   display: flex;
   flex-direction: row;

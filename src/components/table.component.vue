@@ -1,10 +1,16 @@
 <template>
-    <div class="table-responsive"> <!--class="table-wrapper"-->
+    <div class="table-responsive">
         <table class="table table-dark">
             <thead>
                 <tr>
                     <th scope="col" v-for="(header, kh) in tableHeaderValues" :key="kh" @click="sortRows(header)">
-                        <span>{{ header }}</span>
+                        <div class="d-flex flex-row align-items-center">
+                            <span class="mr-1">{{ header }}</span>
+                            <template v-if="sortKey == header">
+                                <AfIcon v-if="!reverse" :icon="'arrow-up'" :fill="'#FFFFFF'"></AfIcon>
+                                <AfIcon v-if="reverse" :icon="'arrow-down'" :fill="'#FFFFFF'"></AfIcon>
+                            </template>
+                        </div>
                     </th>
                 </tr>
             </thead>
@@ -21,65 +27,72 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
+import AfIcon from '@/components/icons/arrow-up.icon.vue';
 
 export default defineComponent({
     name: 'BsTable',
+    components: {
+        AfIcon
+    },
     props: {
         tableHeaderValues: { type: Array as () => string[] },
         tableRowValues: { type: Array as () => any[] }
     },
     setup(props) {
-        console.log(props);
 
-        let sortKey = 'name';
-        let reverse=  false;
-        const sortedRows = ref(props.tableRowValues);
+        let sortKey = ref('');
+        let reverse = ref(false);
+        const sortedRows = ref([] as any[]);
 
         const sortRows = (header: string) => {
-            console.log('sorting rows', header);
-            if (sortKey === header) {
-                reverse = !reverse;
+            if (sortKey.value === header) {
+                reverse.value = !reverse.value;
             } else {
-                sortKey = header;
-                reverse = false;
+                sortKey.value = header;
+                reverse.value = false;
             }
-            console.log(sortKey, reverse);
-            console.log(sortedRows.value);
 
             sortedRows.value = [...props.tableRowValues as any[]].sort((a: any, b: any) => {
-                const modifier = reverse ? -1 : 1;
-                console.log(a, b);
-
-                const valA = a[sortKey];
-                const valB = b[sortKey];
-                console.log(valA, valB);
+                const modifier = reverse.value ? -1 : 1;
+                const valA = a[sortKey.value];
+                const valB = b[sortKey.value];
                 if (valA < valB) return -modifier;
                 if (valA > valB) return modifier;
                 return 0;
             });
-            console.log(sortedRows.value);
-
         };
 
         watch(
-            () => props.tableRowValues,
-            (newValue) => {
-                sortedRows.value = [...newValue as any[]];
-            }
+            [() => props.tableRowValues, () => sortKey.value, () => reverse.value],
+            ([tableRowValues, currentSortKey, currentReverse]) => {
+                if (tableRowValues && tableRowValues.length > 0) {
+                    sortedRows.value = [...tableRowValues].sort((a: any, b: any) => {
+                        const modifier = currentReverse ? -1 : 1;
+                        const valA = a[currentSortKey];
+                        const valB = b[currentSortKey];
+                        if (valA < valB) return -modifier;
+                        if (valA > valB) return modifier;
+                        return 0;
+                    });
+                }
+            },
+            { immediate: true }
         );
 
-        return { sortedRows, sortRows };
+
+        return { sortKey, reverse, sortedRows, sortRows };
     }
 });
 </script>
 
 <style scoped>
-.table-wrapper {
-    position: relative;
-    max-height: 85vh;
-    max-width: 100%;
-    overflow: auto;
-    display: block;
-    flex: 0 1 100%;
+div.table-responsive table thead tr th span {
+    color: var(--accent-color);
+    cursor: pointer;
+    margin-right: 12px;
+}
+
+div.table-responsive table thead tr th img {
+    width: 1em;
 }
 </style>
