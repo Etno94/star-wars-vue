@@ -118,9 +118,8 @@ body {
   color: var(--primary-color);
 }
 #app {
-  /* height: auto; */
   width: 100%;
-  /* min-height: 100vh; */
+  min-height: 100vh;
   padding: 12px;
   display: flex;
   flex-direction: row;

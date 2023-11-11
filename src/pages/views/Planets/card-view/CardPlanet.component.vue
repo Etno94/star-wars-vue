@@ -1,16 +1,16 @@
 <template v-if="planetData">
     <div class="wrapper">
-        <div class="clash-card barbarian">
-            <div class="clash-card__image clash-card__image--barbarian">
+        <div class="clash-card">
+            <div class="clash-card__image clash-card__image">
                 <img :src="creatorImage()" :alt="planetData?.name.toLowerCase()" @error="imageError = true"/>
             </div>
-            <div class="clash-card__level clash-card__level--barbarian">Level 4</div>
+            <div class="clash-card__level clash-card__level">Level 4</div>
             <div class="clash-card__unit-name">{{ planetData?.name }}</div>
             <div class="clash-card__unit-description">
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consectetur placeat, facilis officia molestias necessitatibus quidem. Nesciunt veritatis fugiat expedita sint libero obcaecati necessitatibus ipsam excepturi similique, illo odit perferendis blanditiis.
             </div>
 
-            <div class="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
+            <div class="clash-card__unit-stats clash-card__unit-stats clearfix">
                 <div class="one-third">
                     <div class="stat">20<sup>S</sup></div>
                     <div class="stat-value">Training</div>
@@ -36,7 +36,7 @@
 import { defineComponent } from 'vue';
 
 // Models
-import { Planet } from '../../../../models/planet.model';
+import { Planet } from '@/models/planet.model';
 
 
 export default defineComponent({
@@ -86,13 +86,10 @@ export default defineComponent({
     margin-bottom: 35px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-}
-
-.clash-card__image--barbarian {
     background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian-bg.jpg');
 }
 
-.clash-card__image--barbarian img {
+.clash-card__image img {
     width: 270px;
     position: absolute;
     top: -54px;
@@ -104,10 +101,7 @@ export default defineComponent({
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 3px;
-}
-
-.clash-card__level--barbarian {
-    color: rown;
+    color: brown;
 }
 
 .clash-card__unit-name {
@@ -122,7 +116,7 @@ export default defineComponent({
     margin-bottom: 10px;
 }
 
-.clash-card__unit-stats--barbarian {
+.clash-card__unit-stats {
     background: brown;
 }
 

@@ -44,6 +44,7 @@ a:hover {
     text-decoration: none;
 }
 /* Reset */
+
 nav {
     flex: 1 1 90%;
 }

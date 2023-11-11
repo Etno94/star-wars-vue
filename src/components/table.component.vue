@@ -40,7 +40,7 @@ export default defineComponent({
     },
     setup(props) {
 
-        let sortKey = ref('');
+        let sortKey = ref('name');
         let reverse = ref(false);
         const sortedRows = ref([] as any[]);
 
