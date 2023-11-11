@@ -90,6 +90,19 @@ export default defineComponent(
 </script>
 
 <style>
+@import "https://fonts.googleapis.com/css?family=Roboto:700";
+
+:root {
+  --main-bg-color: #1c1b1b;
+
+  --accent-color: rgb(233, 231, 84);
+  --primary-color: rgba(255, 255, 255, 0.781);
+}
+
+* {
+  text-decoration: none;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -100,6 +113,9 @@ body {
   line-height: 1;
   list-style: none;
   border-spacing: 0;
+  text-decoration: none;
+  font-family: Roboto, sans-serif;
+  color: var(--primary-color);
 }
 #app {
   height: auto; /*100vh;*/
@@ -112,7 +128,7 @@ body {
   align-content: flex-start;
   justify-content: center;
   align-items: center;
-  background-color: #1c1b1b;
+  background-color: var(--main-bg-color);
 }
 #app>* {
   margin-bottom: 12px;

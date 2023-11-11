@@ -4,39 +4,43 @@
         v-bind:tableRowValues="tableRowValues"
     >
     </BsTable>
-    <BsPagination></BsPagination>
+    <CardPlanet v-for="(planet, kplanet) in starwarsPlanets" :key="kplanet" :planetData="planet" class="m-3"></CardPlanet>
 </template>
 
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import {setLocalStorage, getLocalStorage} from '../services/storage.service';
+import {setLocalStorage, getLocalStorage} from '../../../services/storage.service';
 
-import {LocalStorageEnum} from '../enums/localStorage.enum';
+import {LocalStorageEnum} from '../../../enums/localStorage.enum';
 
 // Models & Dtos
-import {Paged} from '../models/paged.model';
-import {Planet} from '../models/planet.model';
-import {Table} from '../models/table.model';
+import {Paged} from '../../../models/paged.model';
+import {Planet} from '../../../models/planet.model';
+import {Table} from '../../../models/table.model';
 
 // Components
-import BsTable from '../components/table.component.vue';
-import BsPagination from '../components/pagination.component.vue';
+import BsTable from '../../../components/table.component.vue';
+import CardPlanet from './card-view/CardPlanet.component.vue';
 
 export default defineComponent({
   name: 'SwPlanets',
   components: {
     BsTable,
-    BsPagination
+    CardPlanet
   },
   data() {
     return {
+      // Service data
       localStorageKeys: LocalStorageEnum,
       swPlanetsApiURL: "https://swapi.dev/api/planets/",
-      starwarsPlanets: {} as Paged<Planet>,
+      // Tabla data
+      starwarsPagedPlanets: {} as Paged<Planet>,
       tableHeaderValues: [] as string[],
       tableRowValues: [] as Planet[],
-      propsToExclude: ['created', 'edited', 'url']
+      propsToExclude: ['created', 'edited', 'url'],
+      // Card data
+      starwarsPlanets: [] as Planet[],
     };
   },
   async mounted() {
@@ -45,12 +49,13 @@ export default defineComponent({
 
     let localStarwarsPlanets = getLocalStorage(this.localStorageKeys.StarWars_Planets_Entries);
     if (localStarwarsPlanets) {
-      this.starwarsPlanets = JSON.parse(localStarwarsPlanets);
+      this.starwarsPagedPlanets = JSON.parse(localStarwarsPlanets);
     } else {
       await this.getSwPlanets();
-      setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPlanets));
+      setLocalStorage(this.localStorageKeys.StarWars_Planets_Entries, JSON.stringify(this.starwarsPagedPlanets));
     }
-    const formatedData: Table<Planet> | null = this.formatSwPlanetsData(this.starwarsPlanets.results);
+    this.starwarsPlanets = this.starwarsPagedPlanets.results;
+    const formatedData: Table<Planet> | null = this.formatSwPlanetsData(this.starwarsPagedPlanets.results);
     this.tableHeaderValues = formatedData?.headers || [];
     this.tableRowValues = formatedData?.rows || [];
   },
@@ -69,7 +74,7 @@ export default defineComponent({
 
         const data: Paged<Planet> = await response.json();
 
-        return (this.starwarsPlanets = data);
+        return (this.starwarsPagedPlanets = data);
       } catch (error) {
         if (error instanceof TypeError) {
           console.error('A network error occurred', error.message);
