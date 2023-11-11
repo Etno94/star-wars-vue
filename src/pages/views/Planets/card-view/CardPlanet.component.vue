@@ -1,16 +1,16 @@
 <template v-if="planetData">
     <div class="wrapper">
         <div class="clash-card">
-            <div class="clash-card__image clash-card__image">
+            <div class="clash-card__image">
                 <img :src="creatorImage()" :alt="planetData?.name.toLowerCase()" @error="imageError = true"/>
             </div>
-            <div class="clash-card__level clash-card__level">Level 4</div>
+            <div class="clash-card__level">Level 4</div>
             <div class="clash-card__unit-name">{{ planetData?.name }}</div>
             <div class="clash-card__unit-description">
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consectetur placeat, facilis officia molestias necessitatibus quidem. Nesciunt veritatis fugiat expedita sint libero obcaecati necessitatibus ipsam excepturi similique, illo odit perferendis blanditiis.
             </div>
 
-            <div class="clash-card__unit-stats clash-card__unit-stats clearfix">
+            <div class="clash-card__unit-stats clearfix">
                 <div class="one-third">
                     <div class="stat">20<sup>S</sup></div>
                     <div class="stat-value">Training</div>
@@ -58,14 +58,14 @@ export default defineComponent({
 </script>
 
 
-<style>
+<style lang="scss">
 .wrapper {
     padding-top: 40px;
     padding-bottom: 40px;
-}
 
-.wrapper:focus {
-    outline: 0;
+    &:focus {
+        outline: 0;
+    }
 }
 
 .clash-card {
@@ -87,13 +87,13 @@ export default defineComponent({
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian-bg.jpg');
-}
 
-.clash-card__image img {
-    width: 270px;
-    position: absolute;
-    top: -54px;
-    left: -21px;
+    img {
+        width: 270px;
+        position: absolute;
+        top: -54px;
+        left: -21px;
+    }
 }
 
 .clash-card__level {
@@ -118,43 +118,41 @@ export default defineComponent({
 
 .clash-card__unit-stats {
     background: brown;
-}
-
-.clash-card__unit-stats {
     color: white;
     font-weight: 700;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+
+    .one-third {
+        width: 33%;
+        float: left;
+        padding: 20px 15px;
+    }
+
+    sup {
+        position: absolute;
+        bottom: 4px;
+        font-size: 45%;
+        margin-left: 2px;
+    }
+
+    .stat {
+        position: relative;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .stat-value {
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .no-border {
+        border-right: none;
+    }
 }
 
-.clash-card__unit-stats .one-third {
-    width: 33%;
-    float: left;
-    padding: 20px 15px;
-}
-
-.clash-card__unit-stats sup {
-    position: absolute;
-    bottom: 4px;
-    font-size: 45%;
-    margin-left: 2px;
-}
-
-.clash-card__unit-stats .stat {
-    position: relative;
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.clash-card__unit-stats .stat-value {
-    text-transform: uppercase;
-    font-weight: 400;
-    font-size: 12px;
-}
-
-.clash-card__unit-stats .no-border {
-    border-right: none;
-}
 
 .clearfix:after {
     visibility: hidden;
@@ -163,15 +161,5 @@ export default defineComponent({
     content: " ";
     clear: both;
     height: 0;
-}
-
-.slick-prev {
-    left: 100px;
-    z-index: 999;
-}
-
-.slick-next {
-    right: 100px;
-    z-index: 999;
 }
 </style>

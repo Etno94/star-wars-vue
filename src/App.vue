@@ -89,7 +89,7 @@ export default defineComponent(
 });
 </script>
 
-<style>
+<style lang="scss">
 @import "https://fonts.googleapis.com/css?family=Roboto:700";
 
 :root {
@@ -128,8 +128,9 @@ body {
   justify-content: center;
   align-items: center;
   background-color: var(--main-bg-color);
-}
-#app>* {
-  margin-bottom: 12px;
+
+  > * {
+    margin-bottom: 12px;
+  }
 }
 </style>

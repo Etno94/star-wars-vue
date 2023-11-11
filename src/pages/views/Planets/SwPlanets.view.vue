@@ -153,7 +153,7 @@ export default defineComponent({
 
 </script>
 
-<style>
+<style lang="scss">
 div.controls {
   flex: 1 1 100%;
 }

@@ -85,14 +85,10 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-div.table-responsive table thead tr th span {
+<style lang="scss" scoped>
+div.table-responsive table thead tr th span{
     color: var(--accent-color);
     cursor: pointer;
     margin-right: 12px;
-}
-
-div.table-responsive table thead tr th img {
-    width: 1em;
 }
 </style>
