@@ -26,7 +26,7 @@ table.component.vue:
 - setup(props)
 - line 83: return { sortKey, reverse, sortedRows, sortRows };
     
-In order to have access to these ref variables in the template, it's necesary to return them, making them being 'closed over';
+In order to have access to these ref variables in the template, it's necesary to return them, making them being 'closed over'. Although, this may not be the purest form of Closure.
 
 ### Sidenote
 
