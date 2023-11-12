@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import AfIcon from '@/components/icons/arrow-up.icon.vue';
+import AfIcon from '@/components/icons/af-icons.vue';
 
 export default defineComponent({
     name: 'BsTable',
@@ -62,6 +62,11 @@ export default defineComponent({
             });
         };
 
+        // It was tricky to understand the behaviour of watch() and
+        // how it manages the currentValue, oldValue and so on,
+        // because I faced an issue where the table started empty
+        // until I clicked on one of the header sorts.
+        // Applying an initial sort was the key to solve this
         watch(
             [() => props.tableRowValues, () => sortKey.value, () => reverse.value],
             ([tableRowValues, currentSortKey, currentReverse]) => {

@@ -51,7 +51,7 @@ export default defineComponent({
       starwarsPagedPlanets: {} as Paged<Planet>,
       tableHeaderValues: [] as string[],
       tableRowValues: [] as Planet[],
-      propsToExclude: ['created', 'edited', 'url'],
+      propsToExclude: ['created', 'edited', 'url'], // We can set this props because we know ahead of time the dto result
       // Card data
       starwarsPlanets: [] as Planet[],
       // View mode
@@ -75,10 +75,14 @@ export default defineComponent({
     this.tableRowValues = formatedData?.rows || [];
   },
   methods: {
+    // Here we deal with a default value for swPlanetsApiURL in case there is
+    // no APIURL saved in our localStorage
     getSwPlanetsApiURL() {
       let localStarwarsPlanetsApiURL = getLocalStorage(this.localStorageKeys.StarWars_Planet_ApiURL);
       if (localStarwarsPlanetsApiURL) this.swPlanetsApiURL = JSON.parse(localStarwarsPlanetsApiURL);
     },
+    // Here we consume the planets APiURL to get the data
+    // as well as we do with the root entries in our App.vue
     async getSwPlanets() {
       try {
         const response = await fetch(this.swPlanetsApiURL);
@@ -99,6 +103,8 @@ export default defineComponent({
         throw error;
       }
     },
+    // With this function, my goal was to pass a standardized
+    // dto to the generic table.component.vue
     formatSwPlanetsData(swPlanetsFetchedData: Planet[]): Table<Planet> | null {
       if (!swPlanetsFetchedData.length) return null;
 
@@ -125,6 +131,7 @@ export default defineComponent({
           url: '',
         };
 
+        // First we fill the Planet object checking for types and props to be excluded
         for (let key of tableData.headers) {
           if (!this.propsToExclude.includes(key)) {
             if (typeof filteredRow[key as keyof Planet] === 'number') {
@@ -134,6 +141,7 @@ export default defineComponent({
             }
           }
         }
+        // Then we guarantee the order of the props as the headers indicate
         const orderedRow = this.sortProperties(filteredRow, tableData.headers);
         tableData.rows.push(orderedRow);
       });
@@ -142,6 +150,7 @@ export default defineComponent({
     sortProperties(obj: any, keysOrder: string[]) {
       const ordered: any = {};
       keysOrder.forEach((key) => {
+        // eslint won't let me get away without this one
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
           ordered[key] = obj[key];
         }

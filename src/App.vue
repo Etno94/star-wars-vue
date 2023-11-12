@@ -28,14 +28,17 @@ export default defineComponent(
     let localStarwarsEntries = getLocalStorage(this.localStorageKeys.StarWars_Root_Entries);
     if (localStarwarsEntries) {
       this.starwarsEntries = JSON.parse(localStarwarsEntries);
+      this.localSaveSwEntries(this.starwarsEntries);
     } 
     else {
       await this.getSWEntries();
       setLocalStorage(this.localStorageKeys.StarWars_Root_Entries, JSON.stringify(this.starwarsEntries));
     }
-    this.localSaveSwEntries(this.starwarsEntries);
   },
   methods: {
+    // A possible side effect here is that 'devEnvironment.baseApiURL' is not properly configured.
+    // Because of that scenario, to handle any errors the try catch is implemented along with
+    // checking the response status
     async getSWEntries() {
       try {
         const response = await fetch(devEnvironment.baseApiURL);
@@ -55,8 +58,15 @@ export default defineComponent(
         throw error;
       }
     },
+    // Here we try to take advantage of localStorage in order to prevent
+    // consuming the API without need. But a possible side effect could
+    // be the unchecked use of the function by passing an argument that
+    // is not a string array.
+    // We can ensure avoid any errors by checking the typeof of each
+    // element value.
     localSaveSwEntries(swEntries: string[]) {
       for (let key in swEntries) {
+        if (typeof swEntries[key] != 'string') return;
         switch (key) {
           case this.swRootEntryKeys.films:
             if (!getLocalStorage(this.localStorageKeys.StarWars_Films_ApiURL)) 
